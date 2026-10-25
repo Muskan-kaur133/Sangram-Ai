@@ -4,7 +4,6 @@ Implements saved synthesis endpoints matching mockSavedService.
 Requires authentication and delegates to ISavedAnswerService.
 """
 
-from typing import List
 from fastapi import APIRouter, Depends, Query, status
 
 from app.api.deps import get_current_principal, get_saved_answer_service

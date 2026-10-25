@@ -113,7 +113,7 @@ def setup_logging(log_level: str = "INFO", use_json: bool = True) -> None:
 
     # Align uvicorn and app loggers
     for logger_name in ("uvicorn", "uvicorn.error", "uvicorn.access", "sangram_ai"):
-        l = logging.getLogger(logger_name)
-        l.handlers = [stream_handler]
-        l.propagate = False
-        l.setLevel(level)
+        target_logger = logging.getLogger(logger_name)
+        target_logger.handlers = [stream_handler]
+        target_logger.propagate = False
+        target_logger.setLevel(level)

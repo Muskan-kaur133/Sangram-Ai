@@ -20,7 +20,6 @@ from app.schemas.battle import (
     BattleInsights,
     BattleMessage,
     BattleSummaryCard,
-    SSEBattleChunk,
     SSEBattleDone,
     SSEBattleError,
     SSEBattleFinal,

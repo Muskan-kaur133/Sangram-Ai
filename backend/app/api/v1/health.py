@@ -1,9 +1,10 @@
 """Liveness and Readiness Probes.
 
-GET /health/live: Application process is running and responding to HTTP requests.
-                 Independent of database or downstream network health.
+GET /health:       Convenience alias for the liveness probe.
+GET /health/live:  Application process is running and responding to HTTP requests.
+                   Independent of database or downstream network health.
 GET /health/ready: Bounded check of PostgreSQL database connectivity.
-                  Returns 200 OK when connected; returns 503 SERVICE_UNAVAILABLE when down.
+                   Returns 200 OK when connected; returns 503 SERVICE_UNAVAILABLE when down.
 """
 
 from datetime import datetime, timezone
@@ -32,6 +33,18 @@ async def health_live() -> HealthLiveResponse:
         version=settings.VERSION,
         timestamp=datetime.now(timezone.utc),
     )
+
+
+@router.get(
+    "",
+    response_model=HealthLiveResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Health Check",
+    description="Convenience alias for the liveness probe. Independent of database state.",
+)
+async def health_check() -> HealthLiveResponse:
+    """Primary health endpoint used by load balancers and smoke tests."""
+    return await health_live()
 
 
 @router.get(

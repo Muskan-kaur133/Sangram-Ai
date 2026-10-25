@@ -40,22 +40,29 @@ Copy-Item .env.example .env
 ```
 *(The default `.env` is pre-configured to run with zero external credentials.)*
 
-### Step 5: Start Local PostgreSQL (via Docker)
+### Step 5: Start Local PostgreSQL (via Docker Compose)
 ```powershell
-# Run PostgreSQL container on port 5432:
-docker run --name sangram-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=sangram_ai -p 5432:5432 -d postgres:16-alpine
+docker compose up -d postgres
 ```
 
-### Step 6: Run Tests
+### Step 6: Apply Database Migrations
+```powershell
+alembic upgrade head
+```
+
+### Step 7: Run Tests
 ```powershell
 pytest -v
+ruff check .
+python -m compileall -q app tests
 ```
 
-### Step 7: Launch the FastAPI Development Server
+### Step 8: Launch the FastAPI Development Server
 ```powershell
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+- **Health Check**: [http://localhost:8000/health](http://localhost:8000/health)
 - **Interactive API Docs (Swagger)**: [http://localhost:8000/docs](http://localhost:8000/docs)
 - **ReDoc Documentation**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
 - **Liveness Probe**: [http://localhost:8000/health/live](http://localhost:8000/health/live)
@@ -89,22 +96,66 @@ cp .env.example .env
 
 ### Step 5: Start PostgreSQL Container
 ```bash
-docker run --name sangram-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=sangram_ai -p 5432:5432 -d postgres:16-alpine
+docker compose up -d postgres
 ```
 
-### Step 6: Run Tests
+### Step 6: Apply Database Migrations
+```bash
+alembic upgrade head
+```
+
+### Step 7: Run Tests and Checks
 ```bash
 pytest -v
+ruff check .
+python -m compileall -q app tests
 ```
 
-### Step 7: Start Server
+### Step 8: Start Server
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ---
 
-## 3. Database Migration Commands (Alembic)
+## 3. Makefile Shortcuts
+
+From `backend/`, the same workflow is available through `make`:
+
+```bash
+make help           # list all targets
+make venv           # create .venv with Python 3.11+
+make install        # install requirements
+make db-up          # docker compose up -d postgres
+make db-migrate     # alembic upgrade head
+make db-seed        # create the development demo user
+make dev            # uvicorn with reload on 127.0.0.1:8000
+make test           # pytest -q
+make lint           # ruff check .
+make format         # ruff format .
+make typecheck      # byte-compile app and tests
+```
+
+`make` defaults to `.venv/bin/python`. Override it if needed:
+
+```bash
+make test PYTHON=python
+```
+
+### Development demo user
+
+The seed command creates a real password-backed account for local testing. It
+does **not** bypass authentication; log in through the normal auth endpoints or
+the frontend with:
+
+- **Email:** `demo@sangram.ai`
+- **Password:** `SangramDemo123!`
+
+The seeder refuses to run when `ENVIRONMENT=production`.
+
+---
+
+## 4. Database Migration Commands (Alembic)
 
 Developer 2 owns domain migrations. The scaffold is pre-configured:
 
@@ -121,7 +172,7 @@ alembic downgrade -1
 
 ---
 
-## 4. Connecting the Frontend
+## 5. Connecting the Frontend
 
 To point the React frontend at your local backend:
 1. Navigate to `frontend/`.

@@ -5,8 +5,8 @@ Routes require authentication and delegate to IBattleService and IBattleStreamSe
 returning 501 MODULE_NOT_IMPLEMENTED until Developer 4 connects orchestration logic.
 """
 
-from typing import List, Optional
-from fastapi import APIRouter, Depends, Header, Query, Request, status
+from typing import Optional
+from fastapi import APIRouter, Depends, Header, Query, status
 from fastapi.responses import StreamingResponse
 
 from app.api.deps import (

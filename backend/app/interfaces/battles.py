@@ -4,7 +4,7 @@ Defines the protocols Developer 4 must fulfill to replace the mock deterministic
 battle generator with multi-model dialectic debate and SSE streaming.
 """
 
-from typing import Any, AsyncGenerator, List, Optional, Protocol, Tuple, runtime_checkable
+from typing import AsyncGenerator, List, Optional, Protocol, Tuple, runtime_checkable
 from app.schemas.battle import (
     Battle,
     BattleCreateRequest,
