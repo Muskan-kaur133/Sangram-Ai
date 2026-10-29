@@ -1,6 +1,5 @@
 """End-to-end auth flows against a real (SQLite) database - Developer 2."""
 
-import pytest
 from sqlalchemy import func, select
 
 from app.db.auth_models import UserSession
@@ -214,7 +213,9 @@ async def test_delete_account_requires_password_and_cascades(client, client_b, d
     assert (await client.get("/api/auth/me")).status_code == 401
 
     async with db_factory() as db:
-        count = lambda m: db.scalar(select(func.count()).select_from(m))
+        def count(model):
+            return db.scalar(select(func.count()).select_from(model))
+
         assert await count(User) == 1
         assert await count(Profile) == 1
         assert await count(Battle) == 1 and await count(SavedAnswer) == 1

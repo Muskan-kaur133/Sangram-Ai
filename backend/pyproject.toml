@@ -36,6 +36,18 @@ dev = [
     "ruff>=0.5.0"
 ]
 
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+exclude = [".venv", "alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+# conftest inserts the backend root on sys.path before importing the app.
+"tests/conftest.py" = ["E402"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]

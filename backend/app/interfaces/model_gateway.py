@@ -4,7 +4,7 @@ Defines the protocol Developer 3 must implement to bridge model profiles
 to live LLM providers (OpenAI, Google, Anthropic, Meta/Groq, Mistral, xAI).
 """
 
-from typing import AsyncGenerator, Dict, List, Optional, Protocol, runtime_checkable
+from typing import AsyncGenerator, Dict, List, Protocol, runtime_checkable
 from app.schemas.model import ModelProfile
 
 

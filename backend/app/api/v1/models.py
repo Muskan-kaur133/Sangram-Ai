@@ -5,7 +5,7 @@ Matches frontend src/data/models.js and src/data/archetypes.js.
 """
 
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter
 
 from app.core.errors import NotFoundError
 from app.schemas.model import ArchetypeProfile, ModelAccent, ModelProfile

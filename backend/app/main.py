@@ -14,10 +14,14 @@ from fastapi.responses import JSONResponse
 
 from app.api.v1.health import router as health_router
 from app.api.v1.router import api_v1_router
-from app.core.config import Settings, get_settings
+from app.core.config import get_settings
 from app.core.errors import AppErrorCode, AppException
 from app.core.logging import request_id_ctx_var, setup_logging
-from app.core.middleware import AccessLoggingMiddleware, RequestIDMiddleware
+from app.core.middleware import (
+    AccessLoggingMiddleware,
+    RequestIDMiddleware,
+    SecurityHeadersMiddleware,
+)
 from app.db.session import close_db_engine
 
 logger = logging.getLogger("sangram_ai.app")
@@ -88,6 +92,9 @@ def create_app() -> FastAPI:
     # 3. Request-ID generation and propagation (X-Request-ID)
     app.add_middleware(RequestIDMiddleware)
 
+    # 4. Security response headers (outermost so every response is covered)
+    app.add_middleware(SecurityHeadersMiddleware)
+
     # --------------------------------------------------------------------------
     # Central Exception Handlers (Standardized error envelope)
     # --------------------------------------------------------------------------
@@ -136,7 +143,7 @@ def create_app() -> FastAPI:
     @app.exception_handler(HTTPException)
     async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
         req_id = getattr(request.state, "request_id", None) or request_id_ctx_var.get() or "unknown"
-        
+
         # Map HTTP status code to appropriate AppErrorCode
         code_map = {
             400: AppErrorCode.API_FAILURE,

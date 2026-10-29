@@ -4,7 +4,7 @@ Defines the 6 combatant profiles and 6 cognitive archetypes recognized in Sangra
 Matches frontend src/data/models.js and src/data/archetypes.js.
 """
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 from pydantic import Field
 
 from app.schemas.common import BaseSchema

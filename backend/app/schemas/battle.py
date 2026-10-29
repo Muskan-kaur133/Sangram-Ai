@@ -6,7 +6,7 @@ as documented in docs/BACKEND_CONTRACT.md and src/services/battleService.js.
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, List, Optional
+from typing import List, Optional
 from pydantic import Field
 
 from app.schemas.common import BaseSchema
